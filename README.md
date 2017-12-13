@@ -69,11 +69,11 @@ The demo performs detection using a VGG16 network trained for detection on PASCA
 
 4. Create symlinks for the PASCAL VOC dataset
 
-	```Shell
+    ```Shell
     cd $FRCN_ROOT/data
     ln -s $VOCdevkit VOCdevkit2007
     ```
-    
+    remember replace $VOCdevkit with its real path
 5. Download pre-trained ImageNet models
 
    Download the pre-trained ImageNet models [[Google Drive]](https://drive.google.com/open?id=0ByuDEGFYmWsbNVF5eExySUtMZmM) [[Dropbox]](https://www.dropbox.com/s/po2kzdhdgl4ix55/VGG_imagenet.npy?dl=0)
@@ -87,7 +87,7 @@ The demo performs detection using a VGG16 network trained for detection on PASCA
 	cd $FRCN_ROOT
 	./experiments/scripts/faster_rcnn_end2end.sh $DEVICE $DEVICE_ID VGG16 pascal_voc
 	```
-  DEVICE is either cpu/gpu
+  DEVICE is either cpu/gpu and DEVICE_ID should be numbers available like 0/1
 
 ### The result of testing on PASCAL VOC 2007 
 
