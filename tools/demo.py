@@ -21,7 +21,7 @@ CLASSES = ('__background__',
 
 #CLASSES = ('__background__','person','bike','motorbike','car','bus')
 
-def vis_detections(im, class_name, dets,ax, thresh=0.5):
+def vis_detections(draw, class_name, dets, thresh=0.5):
     """Draw detected bounding boxes."""
     inds = np.where(dets[:, -1] >= thresh)[0]
     if len(inds) == 0:
@@ -30,26 +30,9 @@ def vis_detections(im, class_name, dets,ax, thresh=0.5):
     for i in inds:
         bbox = dets[i, :4]
         score = dets[i, -1]
-
-        ax.add_patch(
-            plt.Rectangle((bbox[0], bbox[1]),
-                          bbox[2] - bbox[0],
-                          bbox[3] - bbox[1], fill=False,
-                          edgecolor='red', linewidth=3.5)
-            )
-        ax.text(bbox[0], bbox[1] - 2,
-                '{:s} {:.3f}'.format(class_name, score),
-                bbox=dict(facecolor='blue', alpha=0.5),
-                fontsize=14, color='white')
-
-    ax.set_title(('{} detections with '
-                  'p({} | box) >= {:.1f}').format(class_name, class_name,
-                                                  thresh),
-                  fontsize=14)
-    plt.axis('off')
-    plt.tight_layout()
-    plt.draw()
-
+		
+	cv2.rectangle(draw, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 0, 255), 2)
+    cv2.putText(draw, '{:s} {:.3f}'.format(class_name, score), (int(bbox[0]+(bbox[2]-bbox[0])/2), int(bbox[1]+(bbox[3]-bbox[1])/2)), 0, 0.5, (255, 0, 0), 2)
 
 def demo(sess, net, image_name):
     """Detect object classes in an image using pre-computed object proposals."""
@@ -58,6 +41,7 @@ def demo(sess, net, image_name):
     im_file = os.path.join(cfg.DATA_DIR, 'demo', image_name)
     #im_file = os.path.join('/home/corgi/Lab/label/pos_frame/ACCV/training/000001/',image_name)
     im = cv2.imread(im_file)
+    draw = im.copy()
 
     # Detect all object classes and regress object bounds
     timer = Timer()
@@ -68,9 +52,9 @@ def demo(sess, net, image_name):
            '{:d} object proposals').format(timer.total_time, boxes.shape[0])
 
     # Visualize detections for each class
-    im = im[:, :, (2, 1, 0)]
-    fig, ax = plt.subplots(figsize=(12, 12))
-    ax.imshow(im, aspect='equal')
+    #im = im[:, :, (2, 1, 0)]
+    #fig, ax = plt.subplots(figsize=(12, 12))
+    #ax.imshow(im, aspect='equal')
 
     CONF_THRESH = 0.8
     NMS_THRESH = 0.3
@@ -82,8 +66,9 @@ def demo(sess, net, image_name):
                           cls_scores[:, np.newaxis])).astype(np.float32)
         keep = nms(dets, NMS_THRESH)
         dets = dets[keep, :]
-        vis_detections(im, cls, dets, ax, thresh=CONF_THRESH)
-
+        vis_detections(draw, cls, dets, thresh=CONF_THRESH)
+    return draw
+	
 def parse_args():
     """Parse input arguments."""
     parser = argparse.ArgumentParser(description='Faster R-CNN demo')
@@ -132,7 +117,6 @@ if __name__ == '__main__':
     for im_name in im_names:
         print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
         print 'Demo for data/demo/{}'.format(im_name)
-        demo(sess, net, im_name)
-
-    plt.show()
+        drawResult = demo(sess, net, im_name)
+	cv2.imwrite(im_name, drawResult)
 
