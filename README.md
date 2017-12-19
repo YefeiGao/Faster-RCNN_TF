@@ -1,5 +1,5 @@
 # Faster-RCNN_TF
-
+This is a folked repository of https://github.com/smallcorgi/Faster-RCNN_TF.
 This is an experimental Tensorflow implementation of Faster RCNN - a convnet for object detection with a region proposal network.
 For details about R-CNN please refer to the paper [Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks](http://arxiv.org/pdf/1506.01497v3.pdf) by Shaoqing Ren, Kaiming He, Ross Girshick, Jian Sun.
 
@@ -19,7 +19,7 @@ For details about R-CNN please refer to the paper [Faster R-CNN: Towards Real-Ti
 1. Clone the Faster R-CNN repository
   ```Shell
   # Make sure to clone with --recursive
-  git clone --recursive https://github.com/smallcorgi/Faster-RCNN_TF.git
+  git clone --recursive https://github.com/YefeiGao/Faster-RCNN_TF.git
   ```
 
 2. Build the Cython modules
